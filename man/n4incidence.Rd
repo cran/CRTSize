@@ -36,7 +36,7 @@ a cluster randomized trial where the outcome of interest is an incidence rate.  
 whether a new treatment can successfully reduce the incidence of heart attacks over a six month period.  
 In epidemiological terms, \eqn{\lambda_E} and \eqn{\lambda_C} are the expected incidence rate of the outcome in the experimental and control group. Note that if the results suggest a small number of clusters is required, an iterative
 procedure will include the T distribution instead of the normal critical value for alpha, iterating
-until convergence.
+until convergence.  In some cases, such as small ICC values, the algorithm may fail to converge and may need to be stopped.
 }
 
 \value{
@@ -57,15 +57,17 @@ Matthews JNS.  Introduction to Randomized Controlled Clinical Trials (2nd Ed.) C
 Donner A and Klar N.  Design and Analysis of Cluster Randomization Trials in Health Research.  Arnold: London, 2000.
 }
 
-\author{Michael Rotondi, \email{mrotondi@uwo.ca}}
+\author{Michael Rotondi, \email{mrotondi@yorku.ca}}
 
 \seealso{\code{\link{n4means}}, \code{\link{n4props}}}
 
 \examples{
-\dontrun{Suppose a new drug is thought to reduce the incidence of HIV from 0.01 per person-year to 0.005 
-per person-year. Assume the coefficient of variation is 0.25 and that 1000 subjects will be followed 
-for a two year period.  Calculate the required number of subjects that must be enrolled in a study 
-to detect this difference with alpha = 0.05 and power = 0.80.}
+\dontrun{
+Suppose a new drug is thought to reduce the incidence of HIV from 0.01 per person-year to 0.005
+per person-year. Assume the coefficient of variation is 0.25 and that 1000 subjects will be 
+followed for a two year period.  Calculate the required number of subjects that must be enrolled 
+in a study to detect this difference with alpha = 0.05 and power = 0.80.
+}
 n4incidence(le=0.01, lc=0.005, m=1000, t=2, CV=0.25);
 }
 

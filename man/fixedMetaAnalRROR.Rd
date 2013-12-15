@@ -44,13 +44,13 @@ Donner A and Klar N.  Design and Analysis of Cluster Randomization Trials in Hea
 Viechtbauer, W.  Metafor: A meta-analysis package for R.  2010.  Available at: http://www.metafor-project.org/
 }
 
-\author{Michael Rotondi, \email{mrotondi@uwo.ca}}
+\author{Michael Rotondi, \email{mrotondi@yorku.ca}}
 
 \seealso{\code{\link{fixedMetaAnalMD}}, \code{\link{n4propsMeta}}}
 
 \examples{
-fixedMetaAnalRROR(data=rbind(c(0.672, 0.342, 1.321), c(0.942, 0.761, 1.165), c(1.228, 0.384, 3.934)), 
-alpha=0.05);
+fixedMetaAnalRROR(data=rbind(c(0.672, 0.342, 1.321), c(0.942, 0.761, 1.165), 
+c(1.228, 0.384, 3.934)), alpha=0.05);
 }
 
 \keyword{models}

@@ -74,10 +74,10 @@ Matthews JNS.  Introduction to Randomized Controlled Clinical Trials (2nd Ed.) C
 Donner A and Klar N.  Design and Analysis of Cluster Randomization Trials in Health Research.  Arnold: London, 2000.
 
 Rotondi M and Donner A.  (2009) Sample Size Estimation in Cluster Randomized Trials: An Empirical Bayes Approach, Journal
-of Educational and Behavioral Statistics DOI 10.3102/1076998609332756. 
+of Educational and Behavioral Statistics, 34:229-237. 
 }
 
-\author{Michael Rotondi, \email{mrotondi@uwo.ca}}
+\author{Michael Rotondi, \email{mrotondi@yorku.ca}}
 
 \seealso{\code{\link{n4propsEB}}}
 

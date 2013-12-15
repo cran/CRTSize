@@ -14,7 +14,7 @@ two means.}
 
 \arguments{
 \item{delta}{The minimum detectable difference between population means.}
-\item{sigma}{The standard error of the outcome.}
+\item{sigma}{The standard deviation of the outcome.}
 \item{m}{The anticipated average (or actual) cluster size.}
 \item{ICC}{The anticipated value of the intraclass correlation coefficient, \eqn{\rho}.}
 \item{AR}{The Allocation Ratio: AR=1 implies an equal number of subjects per treatment and control
@@ -35,14 +35,14 @@ randomized trial.  It is used for sample size estimation in
 a cluster randomized trial where the outcome is continuous, e.g. blood pressure, or weight.
 Note that if the results suggest a small number of clusters is required, an iterative
 procedure will include the T distribution instead of the normal critical value for alpha,
-iterating until convergence.
+iterating until convergence.  In some cases, such as small ICC values, the algorithm may fail to converge and may need to be stopped.
 }
 
 \value{
 \item{nE}{The minimum number of subjects required in the experimental group.}
 \item{nC}{The minimum number of subjects required in the control group.}
 \item{delta}{The minimum detectable difference between population means.}
-\item{sigma}{The standard error of the outcome.}
+\item{sigma}{The standard deviation of the outcome.}
 \item{alpha}{The desired type I error rate.}
 \item{power}{The desired level of power, recall power = 1 - type II error.}
 \item{AR}{The Allocation Ratio.}
@@ -55,7 +55,7 @@ Matthews JNS.  Introduction to Randomized Controlled Clinical Trials (2nd Ed.) C
 Donner A and Klar N.  Design and Analysis of Cluster Randomization Trials in Health Research.  Arnold: London, 2000.
 }
 
-\author{Michael Rotondi, \email{mrotondi@uwo.ca}}
+\author{Michael Rotondi, \email{mrotondi@yorku.ca}}
 
 \seealso{\code{\link{n4props}}, \code{\link{n4incidence}}}
 

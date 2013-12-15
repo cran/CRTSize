@@ -85,12 +85,12 @@ Turner R et al. (2004) Allowing for imprecision in the intracluster correlation 
 Rotondi M and Donner A.  (2009) Sample Size Estimation in Cluster Randomized Trials: An Empirical Bayes Approach. Journal
 of Educational and Behavioral Statistics.  DOI: 10.3102/1076998609332756. 
 
-Rotondi M and Donner A.  (2011) Sample Size Estimation in Cluster Randomized Trials:
-An Evidence-Based Perspective.  Computational Statistics and Data Analysis (in press).
+Rotondi M and Donner A.  (2012) Sample Size Estimation in Cluster Randomized Trials:
+An Evidence-Based Perspective.  Computational Statistics and Data Analysis  56:1174-1187.
 
 }
 
-\author{Michael Rotondi, \email{mrotondi@uwo.ca}}
+\author{Michael Rotondi, \email{mrotondi@yorku.ca}}
 
 \seealso{\code{\link{fixedMetaAnalMD}}, \code{\link{n4propsMeta}}}
 

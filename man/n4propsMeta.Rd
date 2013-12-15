@@ -86,13 +86,13 @@ Sutton AJ et al. (2007) Evidence-based sample size calculations based upon updat
 Turner R et al. (2004) Allowing for imprecision in the intracluster correlation coefficient in the design of cluster randomized trials.  Statistics in Medicine, 23(8):1195-1214.
 
 Rotondi M and Donner A.  (2009) Sample Size Estimation in Cluster Randomized Trials: An Empirical Bayes Approach. Journal
-of Educational and Behavioral Statistics.  DOI: 10.3102/1076998609332756. 
+of Educational and Behavioral Statistics, 34:229-237.  
 
 Rotondi M and Donner A.  (2011) Sample Size Estimation in Cluster Randomized Trials:
-An Evidence-Based Perspective.  Computational Statistics and Data Analysis (in press).
+An Evidence-Based Perspective.  Computational Statistics and Data Analysis  56:1174-1187.
 }
 
-\author{Michael Rotondi, \email{mrotondi@uwo.ca}}
+\author{Michael Rotondi, \email{mrotondi@yorku.ca}}
 
 \seealso{\code{\link{fixedMetaAnalRROR}}, \code{\link{n4meansMeta}} }
 

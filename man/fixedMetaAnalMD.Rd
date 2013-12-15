@@ -44,7 +44,7 @@ White IR and Thomas J.  Standardized mean differences in individually-randomized
 Viechtbauer, W.  Metafor: A meta-analysis package for R.  2010.  Available at: http://www.metafor-project.org/
 }
 
-\author{Michael Rotondi, \email{mrotondi@uwo.ca}}
+\author{Michael Rotondi, \email{mrotondi@yorku.ca}}
 
 \seealso{\code{\link{fixedMetaAnalRROR}}, \code{\link{n4meansMeta}}}
 

@@ -36,7 +36,7 @@ an individual dies from a heart attack.  In epidemiological terms, pe and pc can
 of as the expected prevalence of the outcome in the experimental and control group. Note that 
 if the results suggest a small number of clusters is required, an iterative
 procedure will include the T distribution instead of the normal critical value for alpha, iterating
-the procedure until convergence.
+the procedure until convergence.  Thus on some occasions, the algorithm may not converge.  In some cases, such as small ICC values or proportions, this fails to converge and may need to be stopped.
 }
 
 \value{
@@ -55,7 +55,7 @@ Matthews JNS.  Introduction to Randomized Controlled Clinical Trials (2nd Ed.) C
 Donner A and Klar N.  Design and Analysis of Cluster Randomization Trials in Health Research.  Arnold: London, 2000.
 }
 
-\author{Michael Rotondi, \email{mrotondi@uwo.ca}}
+\author{Michael Rotondi, \email{mrotondi@yorku.ca}}
 
 \seealso{\code{\link{n4means}}, \code{\link{n4incidence}}}
 
