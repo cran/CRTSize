@@ -40,7 +40,7 @@ while (abs(r$n - nTemp) > 1)
 {
 nTemp <- r$n;
 IFt <- 1 + ((CV^2)*(le^2 + lc^2)*T)/(le + lc);
-r$n <- (IFt*(qnorm(1 - alpha/2) + qnorm(power))^2*(le + lc))/(T*(le - lc)^2);
+r$n <- (IFt*( qt( (1 - alpha/2), df=( 2*(nTemp - 1)) + qt(power, df=(2*(nTemp - 1))))^2*(le + lc))/(T*(le - lc)^2));
 }
 
 }
@@ -50,7 +50,7 @@ r$n <- (IFt*(qnorm(1 - alpha/2) + qnorm(power))^2*(le + lc))/(T*(le - lc)^2);
 if (!two.tailed)
 {
 IFt <- 1 + ((CV^2)*(le^2 + lc^2)*T)/(le + lc);
-r$n <- (IFt*(qnorm(1 - alpha) + qnorm(power))^2*(le + lc))/(T*(le - lc)^2);
+r$n <- (IFt*( qt( (1 - alpha), df=( 2*(nTemp - 1)) + qt(power, df=(2*(nTemp - 1))))^2*(le + lc))/(T*(le - lc)^2));
 
 if (r$n < 30)
 {
@@ -60,7 +60,7 @@ while (abs(r$n - nTemp) > 1)
 {
 nTemp <- r$n;
 IFt <- 1 + ((CV^2)*(le^2 + lc^2)*T)/(le + lc);
-r$n <- (IFt*(qnorm(1 - alpha) + qnorm(power))^2*(le + lc))/(T*(le - lc)^2);
+r$n <- (IFt*( qt( (1 - alpha), df=( 2*(nTemp - 1)) + qt(power, df=(2*(nTemp - 1))))^2*(le + lc))/(T*(le - lc)^2));
 }
 
 }

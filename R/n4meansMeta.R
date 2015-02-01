@@ -355,7 +355,7 @@ return(X);
     p <- length(mu)
     if (!all(dim(Sigma) == c(p, p))) 
         stop("incompatible arguments")
-    eS <- eigen(Sigma, symmetric = TRUE, EISPACK = TRUE)
+    eS <- eigen(Sigma, symmetric = TRUE)
     ev <- eS$values
     if (!all(ev >= -tol * abs(ev[1]))) 
         stop("'Sigma' is not positive definite")
