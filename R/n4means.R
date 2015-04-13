@@ -37,7 +37,7 @@ nTemp <- 0;
 while (abs(r$n - nTemp) > 1)
 {
 nTemp <- r$n;
-r$n <- 2*sigma^2*(1 + (m - 1)*ICC)*(qt((1 - alpha/2), df=( 2*(nTemp - 1) ))) + qt(power, df=(2*(nTemp - 1)))^2/(m*(delta^2));
+r$n <- 2*sigma^2*(1 + (m - 1)*ICC)*((qt((1 - alpha/2), df=( 2*(nTemp - 1) ))) + qt(power, df=(2*(nTemp - 1))))^2/(m*(delta^2));
 }
 
 }
@@ -55,7 +55,7 @@ nTemp <- 0;
 while (abs(r$n - nTemp) > 1)
 {
 nTemp <- r$n;
-r$n <- 2*sigma^2*(1 + (m - 1)*ICC)*(qt((1 - alpha/2), df=( 2*(nTemp - 1) ))) + qt(power, df=(2*(nTemp - 1)))^2/(m*(delta^2));
+r$n <- 2*sigma^2*(1 + (m - 1)*ICC)*((qt((1 - alpha/2), df=( 2*(nTemp - 1) ))) + qt(power, df=(2*(nTemp - 1))))^2/(m*(delta^2));
 }
 
 }

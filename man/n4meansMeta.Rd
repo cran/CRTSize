@@ -95,9 +95,9 @@ An Evidence-Based Perspective.  Computational Statistics and Data Analysis  56:1
 \seealso{\code{\link{fixedMetaAnalMD}}, \code{\link{n4propsMeta}}}
 
 \examples{
-\dontrun{A brief example with 10 iterations.  }
+\dontrun{A brief example with 5 iterations.  }
 n4meansMeta(data=rbind(c(100, 50, 150), c(25, -100, 150), c(-90, -190, 10), c(-125, -200, -50)), 
-k=c(10, 20), ICC=c(0.1, 0.15, 0.18), m=100, sdm=0, meanC=100, sdC=10, iter=10, alpha=0.05, 
+k=c(10, 20), ICC=c(0.1, 0.15, 0.18), m=100, sdm=0, meanC=100, sdC=10, iter=5, alpha=0.05, 
 varRed=TRUE, ICCDistn="smooth");
 }
 

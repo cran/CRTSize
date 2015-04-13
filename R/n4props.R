@@ -39,7 +39,7 @@ nTemp <- 0;
 while (abs(r$n - nTemp) > 1)
 {
 nTemp <- r$n;
-r$n <- ((qt((1 - alpha/2), df=(2*(nTemp - 1))) + qt(power, df=(2*(nTemp - 1))))^2*(pe*(1-pe) + pc*(1-pc))*(1 + (m - 1)*ICC))/(m*(pe - pc)^2);
+r$n <- ( (qt((1 - alpha/2), df=(2*(nTemp - 1))) + qt(power, df=(2*(nTemp - 1))))^2*(pe*(1-pe) + pc*(1-pc))*(1 + (m - 1)*ICC))/(m*(pe - pc)^2);
 }
 
 }
