@@ -53,7 +53,7 @@ that the proportion of variance reduction and power may not always (strictly) de
 exhibits individual-level variation.}
 
 \value{
-\item{power}{The power of the updated meta-analysis.  Presented as a vector of 
+\item{power}{The power of the updated meta-analysis.  Presented as a vector 
 corresponding to the number of clusters.}
 \item{varianceReduction}{The proportionate reduction in variance for the number of clusters in the fixed effects meta-analysis.}
 \item{m}{The mean cluster size.}

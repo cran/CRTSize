@@ -1,5 +1,5 @@
-93e6778895521d83a707e381875dff86 *DESCRIPTION
-6a6b49ca8d6d4353ff43d1ab97299576 *NAMESPACE
+3b2ff47f5ff133be48cb5d42b5f208cd *DESCRIPTION
+4014d560b4287298057d25cdfe1905ec *NAMESPACE
 49822c05060db81d25fcd1a9aa1da985 *R/FixedmetaAnalMD.R
 2941bb7c1445af0ac832b69e228a6a46 *R/FixedmetaAnalRROR.R
 3956dfaa742897c24f1acc1255d9c51e *R/n4incidence.R
@@ -11,10 +11,10 @@ e8123292189d236ca56e16d43ead637c *R/n4propsEB.R
 db757eac17a23f997432440021e0d6bf *R/n4propsMeta.R
 8d593ca567a9a4b6c3959c435eaaf21b *man/fixedMetaAnalMD.Rd
 0d5e73b4df0e4099f7bb3300e0cc8180 *man/fixedMetaAnalRROR.Rd
-2b4cc2275f52da33a4ad9319319614f9 *man/n4incidence.Rd
-54d9ddadb04c1077428ba7fbdf277114 *man/n4means.Rd
+b34686779d684c49248d38a1a5e913c4 *man/n4incidence.Rd
+9d7487af6ca835ceafd2c1fb4a38f5ec *man/n4means.Rd
 10118681c691bb8551af94071ea20f71 *man/n4meansEB.Rd
 74a2e1fec65314412b9b0fa1c0c35ad2 *man/n4meansMeta.Rd
-48cf85b5922b3f0ba72aa8d026f105cf *man/n4props.Rd
+0129115884520ad2e5449ca769ac0149 *man/n4props.Rd
 9a44cee4a334ef8b400a07db1a233311 *man/n4propsEB.Rd
-73c5f63db62c198243a22107569a9fb3 *man/n4propsMeta.Rd
+a4f25ce0c25c9acf7ce5e6e7c63e139a *man/n4propsMeta.Rd

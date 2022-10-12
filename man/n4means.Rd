@@ -30,7 +30,7 @@ if FALSE, a one-sided calculation is performed.}
 
 \details{
 This function provides detailed sample size information, similar to PROC POWER in SAS, but with less
-functionality and more concise output, and of course, adapted for the design of cluster
+functionality and more concise output, and adapted for the design of cluster
 randomized trial.  It is used for sample size estimation in 
 a cluster randomized trial where the outcome is continuous, e.g. blood pressure, or weight.
 Note that if the results suggest a small number of clusters is required, an iterative
@@ -39,8 +39,8 @@ iterating until convergence.  In some cases, such as small ICC values, the algor
 }
 
 \value{
-\item{nE}{The minimum number of subjects required in the experimental group.}
-\item{nC}{The minimum number of subjects required in the control group.}
+\item{nE}{The minimum number of clusters required in the experimental group.}
+\item{nC}{The minimum number of clusters required in the control group.}
 \item{delta}{The minimum detectable difference between population means.}
 \item{sigma}{The standard deviation of the outcome.}
 \item{alpha}{The desired type I error rate.}

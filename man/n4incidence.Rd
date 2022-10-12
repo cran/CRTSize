@@ -40,6 +40,8 @@ until convergence.  In some cases, such as small ICC values, the algorithm may f
 }
 
 \value{
+\item{nE}{The minimum number of clusters required in the experimental group.}
+\item{nC}{The minimum number of clusters required in the control group.}
 \item{le}{The anticipated incidence rate, \eqn{\lambda_E}, in the experimental group with the outcome.}
 \item{lc}{The anticipated incidence rate, \eqn{\lambda_C}, in the control group with the outcome.}
 \item{m}{The anticipated average (or actual) cluster size.}

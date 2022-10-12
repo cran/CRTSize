@@ -40,8 +40,8 @@ the procedure until convergence.  Thus on some occasions, the algorithm may not 
 }
 
 \value{
-\item{nE}{The minimum number of subjects required in the experimental group.}
-\item{nC}{The minimum number of subjects required in the control group.}
+\item{nE}{The minimum number of clusters required in the experimental group.}
+\item{nC}{The minimum number of clusters required in the control group.}
 \item{pe}{The anticipated proportion of individuals in the experimental group with the outcome.}
 \item{pc}{The anticipated proportion of individuals in the control group with the outcome.}
 \item{alpha}{The desired type I error rate.}
