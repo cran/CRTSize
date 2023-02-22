@@ -1,10 +1,14 @@
-n4meansMeta <- function(data, k, ICC, ICCDistn="unif", lower=0, upper=0.25, varRed=FALSE, m, sdm, meanC, sdC, sdT=sdC, iter=1000, alpha=0.05)
+n4meansMeta <- function(data, model="fixed", k, ICC, ICCDistn="unif", lower=0, upper=0.25, varRed=FALSE, m, sdm, meanC, sdC, sdT=sdC, iter=1000, alpha=0.05)
 {
 if (!is.matrix(data))
 	stop("Sorry data must be a matrix of Mean Difference, 95 % Lower and Upper Limits from Previous Studies")
 
 if (! ( (ICCDistn == "fixed") | (ICCDistn == "unif") | (ICCDistn == "normal") | (ICCDistn == "smooth") ) )
 	stop("Sorry, the ICC Distribution must be one of: fixed, unif, normal or smooth.")
+
+if (! ( (model == "fixed") | (model == "random") ) )
+	stop("Sorry, model must be fixed, or random.")
+
 
 if ( (ICCDistn == "fixed") && (length(ICC) > 1) )
 	stop("Sorry you can only provide a single ICC value with the fixed distribution option.")
@@ -34,19 +38,18 @@ if (k[i] <= 1)
 
 X <- NULL;
 
-X$data <- data; X$k <- k; X$ICC <- ICC;
+X$data <- data; X$model <- model; X$k <- k; X$ICC <- ICC;
 X$m <- m; X$sdm <- sdm; X$meanC <- meanC;
 X$sdC <- sdC; X$iter <- iter; X$varRed <- varRed;
 X$alpha <- alpha;
 
-original <- fixedMetaAnalMD(data, alpha=X$alpha);
+original <- .metaAnalMD(data, model=X$model, alpha=X$alpha);
 
-X$newMean <- original$thetaF;
+X$newMean <- original$theta;
 X$newVar <- original$Var;
 
-X$thetaNew <- rnorm(1, X$newMean, sqrt(X$newVar))
-X$lF <- original$lF;
-X$uF <- original$uF
+X$l <- original$l;
+X$u <- original$u
 
 X$Power <- rep(0, length(k));
 
@@ -91,14 +94,17 @@ varReductionIter <- rep(NA,iter);
 
 for (i in 1:iter)
 {
+
+X$thetaNew <- rnorm(1, X$newMean, sqrt(X$newVar))
+
 meanC0 <- rnorm(1, meanC, sdC);
 
 meanT0 <- X$thetaNew + meanC0;
 
 w <- .oneCRTCTS(meanT=meanT0, meanC=meanC0, sdT=sdT, sdC=sdC, kC=kC0, kT=kT0, mTmean=m, mTsd=sdm, mCmean=m, mCsd=sdm, ICCT=ICCT0[i], ICCC=ICCT0[i])
 x <- .summarizeTrialCTS(ResultsTreat=w$ResultsTreat, ResultsControl=w$ResultsControl)
-y <- .makeCI(Delta=x$meanDiff, varDelta=x$varMeanDiff)
-z <- fixedMetaAnalMD(data=rbind(data, y), alpha=alpha);
+y <- .makeCI(Delta=x$meanDiff, varDelta=x$varMeanDiff, alpha=X$alpha)
+z <- .metaAnalMD(data=rbind(data, y), model=X$model, alpha=X$alpha);
 Reject[i] <- z$Sig;
 if (varRed)
 {
@@ -144,9 +150,9 @@ print(1 - x$varianceReduction);
 #Print method
 summary.n4meansMeta <- function(object, ...)
 {
-cat("Sample Size Calculation for Binary Outcomes Based on Updated Meta-Analysis", "\n \n", sep="")
-cat("The original Fixed Effects Risk Difference is ", object$newMean, "\n", sep="");
-cat("With ", (1 - object$alpha)*100,  "% Confidence Limits: (", object$lF, ", ", object$uF, ") \n \n",sep="");
+cat("Sample Size Calculation for Continuous Outcomes Based on Updated Meta-Analysis", "\n \n", sep="")
+cat("The original ", object$model, " Effects Mean Difference is ", object$newMean, "\n", sep="");
+cat("With ", (1 - object$alpha)*100,  "% Confidence Limits: (", object$l, ", ", object$u, ") \n \n",sep="");
 
 cat("The Approximate Power of the Updated Meta-Analysis is: (Clusters per Group) \n", sep="");
 print(object$Power);
@@ -187,9 +193,9 @@ return(Summary);
 ###############################
 
 #Returns Confidence Interval
-.makeCI <- function(Delta, varDelta)
+.makeCI <- function(Delta, varDelta, alpha=0.05)
 {
-X <- c(Delta, (Delta - 1.96*sqrt(varDelta)), (Delta + 1.96*sqrt(varDelta)))
+X <- c(Delta, (Delta - qnorm((1-alpha/2))*sqrt(varDelta)), (Delta + qnorm((1-alpha/2))*sqrt(varDelta)))
 return(X);
 }
 
@@ -374,4 +380,75 @@ return(X);
     if (n == 1) 
         drop(X)
     else t(X)
+}
+
+##############
+
+.metaAnalMD <- function(data, model="fixed", alpha=0.05)
+{
+if (!is.matrix(data))
+	stop("Sorry data must be a matrix of Mean Diff, 95 % Lower and Upper Limits from Previous Studies")
+
+if (ncol(data) != 3)
+	stop("Data must have 3 columns, Mean Diff, 95 % Lower Limit and 95 % Upper Limits from Previous Studies")
+
+if ((alpha >= 1) || (alpha <= 0))
+        stop("Sorry, the alpha must lie within (0,1)")
+
+X <- NULL;
+X$data <- data; X$alpha <- alpha;
+X$model <- model
+
+colnames(X$data) <- c("Mean Diff", "Lower Limit", "Upper Limit");
+
+MD <- data[,1];
+seMD <- (data[,3] - data[,1])/1.96;
+varMD <- seMD^2;
+
+
+Z <- -qnorm(alpha/2)
+
+if (X$model == "fixed")
+{
+w <- 1/varMD;
+X$theta <- sum(MD*w)/sum(w);
+X$u <- X$theta + Z/sqrt(sum(w));
+X$l <- X$theta - Z/sqrt(sum(w));
+X$Var <- 1/sum(w);
+}
+
+if (X$model == "random")
+{
+w <- 1/varMD;
+thetaF <- sum(MD*w)/sum(w);
+Q <- sum(w*(MD-thetaF)^2)
+
+
+C <- sum(w) - (sum(w^2)/sum(w))
+
+t <- ( Q - nrow(X$data) + 1)/C;
+
+if (t < 0) {t <- 0}
+
+w <- 1/(varMD+ t)
+
+X$theta <- sum(MD*w)/sum(w);
+X$u <- X$theta + Z/sqrt(sum(w));
+X$l <- X$theta - Z/sqrt(sum(w));
+X$Var <- 1/sum(w);
+}
+
+
+if ( (X$u < 0) && (X$l < 0) || (X$u > 0) && (X$l > 0) )
+{
+X$Sig <- 1;
+}
+else
+{
+X$Sig <- 0;
+}
+
+
+class(X) <- "metaAnalCTS";
+return(X);
 }

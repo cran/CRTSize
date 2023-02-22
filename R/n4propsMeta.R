@@ -1,10 +1,16 @@
-n4propsMeta <- function(data, k, ICC, ICCDistn="unif", lower=0, upper=0.25, varRed=FALSE, m, sdm, pC, sdpC, iter=1000, alpha=0.05, RR=TRUE)
+n4propsMeta <- function(data, measure="RR", model="fixed", k, ICC, ICCDistn="unif", lower=0, upper=0.25, varRed=FALSE, m, sdm, pC, sdpC, iter=1000, alpha=0.05)
 {
 if (!is.matrix(data))
 	stop("Sorry data must be a matrix of RR/OR, 95 % Lower and Upper Limits from Previous Studies.")
 
 if (! ( (ICCDistn == "fixed") | (ICCDistn == "unif") | (ICCDistn == "normal") | (ICCDistn == "smooth") ) )
 	stop("Sorry, the ICC Distribution must be one of: fixed, unif, normal or smooth.")
+
+if (! ( (model == "fixed") | (model == "random") ) )
+	stop("Sorry, model must be fixed, or random.")
+
+if (! ( (measure == "OR") | (measure == "RR") ) )
+	stop("Sorry, measure must be one of OR or RR.")
 
 if ( (ICCDistn == "fixed") && (length(ICC) > 1) )
 	stop("Sorry you can only provide a single ICC value with the fixed distribution option.")
@@ -36,20 +42,19 @@ if (k[i] <= 1)
 
 X <- NULL;
 
-X$data <- data; X$k <- k; X$ICC <- ICC;
+X$data <- data; X$model <- model; X$k <- k; X$ICC <- ICC;
 X$m <- m; X$sdm <- sdm; X$pC <- pC;
 X$sdpC <- sdpC; X$iter <- iter; X$ICCDistn <- ICCDistn;
 X$lower <- lower; X$upper <- upper;
 X$alpha <- alpha; X$varRed <- varRed;
 
-original <- fixedMetaAnalRROR(data, alpha=X$alpha);
+original <- .metaAnalRROR(data, model=X$model, alpha=X$alpha);
 
-X$newMean <- original$thetaF;
+X$newMean <- original$theta;
 X$newVar <- original$Var;
 
-X$thetaNew <- rnorm(1, X$newMean, sqrt(X$newVar))
-X$lF <- original$lF;
-X$uF <- original$uF
+X$l <- original$l;
+X$u <- original$u
 
 #Obtain pT from the new simulated value and pC...
 
@@ -97,12 +102,28 @@ for (i in 1:iter)
 {
 pC0 <- rnorm(1, pC, sdpC);
 
+
+X$thetaNew <- rnorm(1, X$newMean, sqrt(X$newVar))
+
+if (measure == "RR")
+{
 pT0 <- exp(X$thetaNew + log(pC0));
+}
+
+if (measure == "OR")
+{
+o <- pC0/(1-pC0)
+pT0 <- exp(X$thetaNew + log(o)) / (1 + exp(X$thetaNew + log(o)) )
+}
+
+#Ensure calculated treatment rate is within (0,1)
+if (pT0 >= 0.99) {pT0 <- 0.99}
+if (pT0 <= 0.01) {pT0 <- 0.01}
 
 w <- .oneCRTBinary(pT=pT0, pC=pC0, kC=kC0, kT=kT0, mTmean=m, mTsd=sdm, mCmean=m, mCsd=sdm, ICCT=ICCT0[i], ICCC=ICCT0[i])
-x <- .summarizeTrialRROR(ResultsTreat=w$ResultsTreat, ResultsControl=w$ResultsControl, RR=RR)
-y <- .makeCIRROR(logRROR=x$logRROR, varlogRROR=x$VarLogRROR)
-z <- fixedMetaAnalRROR(data=rbind(data, y), alpha=alpha);
+x <- .summarizeTrialRROR(ResultsTreat=w$ResultsTreat, ResultsControl=w$ResultsControl, measure=measure)
+y <- .makeCIRROR(logRROR=x$logRROR, varlogRROR=x$VarLogRROR, alpha=X$alpha)
+z <- .metaAnalRROR(data=rbind(data, y), model=X$model, alpha=X$alpha);
 Reject[i] <- z$Sig;
 
 if (varRed)
@@ -151,8 +172,8 @@ print(1 - x$varianceReduction);
 summary.n4propsMeta <- function(object, ...)
 {
 cat("Sample Size Calculation for Binary Outcomes Based on Updated Meta-Analysis", "\n \n", sep="")
-cat("The original fixed effects Relative Risk/Odds Ratio is ", exp(object$newMean), "\n", sep="");
-cat("With ", (1 - object$alpha)*100,  "% Confidence Limits: (", exp(object$lF), ", ", exp(object$uF), ") \n \n",sep="");
+cat("The original ", object$model, " effects Relative Risk/Odds Ratio is ", exp(object$newMean), "\n", sep="");
+cat("With ", (1 - object$alpha)*100,  "% Confidence Limits: (", exp(object$l), ", ", exp(object$u), ") \n \n",sep="");
 
 cat("The Approximate Power of the Updated Meta-Analysis is: (Clusters per Group) \n", sep="");
 print(object$Power);
@@ -176,18 +197,18 @@ cat("Iterations =", object$iter, "\n");
 
 #Takes a trial, from oneCRT function; #Generates RR or OR and variances;
 
-.summarizeTrialRROR <- function(ResultsTreat, ResultsControl, RR=TRUE)
+.summarizeTrialRROR <- function(ResultsTreat, ResultsControl, measure="RR")
 {
 Summary <- NULL;
 
-if (RR)
+if (measure== "RR")
 {
 Summary$RROR <- ResultsTreat[1]/ResultsControl[1];
 Summary$logRROR <- log(Summary$RROR);
 Summary$VarLogRROR <- ( ((1 - ResultsTreat[1])*ResultsTreat[3])/(ResultsTreat[2]*ResultsTreat[1]) + ((1 - ResultsControl[1])*ResultsControl[3])/(ResultsControl[2]*ResultsControl[1]) )
 }
 
-else
+if (measure == "OR")
 {
 Summary$RROR <- (ResultsTreat[1]/(1 - ResultsTreat[1]))/ (ResultsControl[1]/(1 - ResultsControl[1]));
 Summary$logRROR <- log(Summary$RROR);
@@ -199,9 +220,9 @@ return(Summary);
 ###############################
 
 #Returns Confidence Interval for either OR or RR
-.makeCIRROR <- function(logRROR, varlogRROR)
+.makeCIRROR <- function(logRROR, varlogRROR, alpha=0.05)
 {
-X <- c(exp(logRROR), exp(logRROR - 1.96*sqrt(varlogRROR)), exp(logRROR + 1.96*sqrt(varlogRROR)))
+X <- c(exp(logRROR), exp(logRROR - qnorm((1-alpha/2))*sqrt(varlogRROR)), exp(logRROR + qnorm((1-alpha/2))*sqrt(varlogRROR)))
 return(X);
 }
 
@@ -325,5 +346,82 @@ CC <- (1 + (mbarC - 1)*ICC);
 X$ResultsTreat <- c(PhatT, MTreat, CT, ICC, kT);
 X$ResultsControl <- c(PhatC, MControl, CC, ICC, kC);
 
+return(X);
+}
+
+############
+
+.metaAnalRROR <- function(data, model="fixed", alpha=0.05)
+{
+if (!is.matrix(data))
+	stop("Sorry data must be a matrix of OR/RR, 95 % Lower and Upper Limits from Previous Studies")
+
+if (ncol(data) != 3)
+	stop("Data must have 3 columns, Odds Ratio/Relative Risk, 95 % Lower Limit and 95 % Upper Limit from Previous Studies")
+
+if ((alpha >= 1) || (alpha <= 0))
+        stop("Sorry, the alpha must lie within (0,1)")
+
+X <- NULL;
+X$data <- data
+X$alpha <- alpha
+X$model <- model
+logRR <- log(data[,1])
+logL <- log(data[,2])
+logU <- log(data[,3])
+
+
+colnames(X$data) <- c("OR/RR", "Lower Limit", "Upper Limit");
+
+selogRR <- (logU - logRR)/1.96;
+varlogRR <- selogRR^2;
+
+
+Z <- -qnorm(alpha/2)
+
+
+if (X$model == "fixed")
+{
+w <- 1/varlogRR;
+X$theta <- sum(logRR*w)/sum(w);
+
+X$u <- X$theta + Z/sqrt(sum(w));
+X$l <- X$theta - Z/sqrt(sum(w));
+X$Var <- 1/sum(w);
+}
+
+if (X$model == "random")
+{
+w <- 1/varlogRR;
+thetaF <- sum(logRR*w)/sum(w);
+Q <- sum(w*(logRR-thetaF)^2)
+
+C <- sum(w) - (sum(w^2)/sum(w))
+
+t <- ( Q - nrow(X$data) + 1)/C;
+
+if (t < 0) {t <- 0}
+
+w <- 1/(varlogRR + t)
+
+X$theta <- sum(logRR*w)/sum(w);
+X$u <- X$theta + Z/sqrt(sum(w));
+X$l <- X$theta - Z/sqrt(sum(w));
+X$Var <- 1/sum(w);
+}
+
+
+
+if ( (X$u < 0) && (X$l < 0) || (X$u > 0) && (X$l > 0) )
+{
+X$Sig <- 1;
+}
+else
+{
+X$Sig <- 0;
+}
+
+
+class(X) <- "metaAnalRROR";
 return(X);
 }

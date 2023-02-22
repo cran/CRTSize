@@ -4,8 +4,6 @@ importFrom("graphics", "hist", "par")
 
 importFrom("stats", "density", "qnorm", "qt", "quantile", "rbinom", "rnorm", "runif", "sd", "var")
 
-S3method(print, fixedMetaAnalMD)
-S3method(print, fixedMetaAnalRROR)
 S3method(print, n4incidence)
 S3method(print, n4means)
 S3method(print, n4meansEB)
@@ -14,8 +12,6 @@ S3method(print, n4props)
 S3method(print, n4propsEB)
 S3method(print, n4propsMeta)
 
-S3method(summary, fixedMetaAnalMD)
-S3method(summary, fixedMetaAnalRROR)
 S3method(summary, n4incidence)
 S3method(summary, n4means)
 S3method(summary, n4meansEB)

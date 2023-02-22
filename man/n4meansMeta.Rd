@@ -9,18 +9,17 @@ This function provides the empirical power/reduction in variance in an updated m
 a vector of number of clusters to randomize per group and a vector of estimates
 of the ICC.}
 
-\usage{n4meansMeta(data, k, ICC, ICCDistn="unif", lower=0, upper=0.25, varRed=FALSE, m, sdm, 
-meanC, sdC, sdT=sdC, iter=1000, alpha=0.05)}
+\usage{n4meansMeta(data, model="fixed", k, ICC, ICCDistn="unif", lower=0, upper=0.25, 
+varRed=FALSE, m, sdm, meanC, sdC, sdT=sdC, iter=1000, alpha=0.05)}
 
 
 \arguments{
 \item{data}{A matrix of individual studies (each row).  The first column contains the estimate
-of the relative risks, second column contains the lower 95 \% confidence limit and the third contains the upper
-95 \% confidence limit.}
+of the mean difference, second column contains the lower 95 \% confidence limit and the third contains the upper 95 \% confidence limit.  }
+\item{model}{One of fixed or random, corresponding to the fixed or random effects meta-analysis models.  Note that the random effects model is estimated according to the DerSimonian-Laird estimate of the between-study variance.}
 \item{k}{A vector of potential number of clusters to randomize to each of the treatment and control
 groups.  Note that this function assumes an equal allocation to treatment and control group status.}
-\item{ICC}{A vector of potential values of the ICC, these can be obtained from the cluster trials
-themselves, or from the literature.}
+\item{ICC}{A vector of potential values of the ICC, these can be obtained from the literature, pilot studies, etc.}
 \item{ICCDistn}{The hypothetical distribution of the ICC values.  This can be set to "fixed" (note that only one ICC value is accepted for this option), "unif" on the range [lower, upper], "normal", corresponding to the truncated normal distribution (Turner et al, 2004), and "smooth" corresponding to the empirical smoothing option. (Rotondi and Donner, 2009)}
 \item{lower}{The lower bound for the smoothing or unif options.  Default value is zero.}
 \item{upper}{The upper bound for the smoothing or unif options.  Default value is 0.25.}
@@ -37,26 +36,26 @@ sdC.}
 \item{iter}{The number of iterations for each value of k and the ICC.  This has a large impact
 on computational time.  Default is 1000.}
 \item{alpha}{The desired type I error rate for calculation of confidence limits for the
-fixed effects level.  For simplicity, this function assumes that each of the inputed lower
-and upper limits that are 95 \% confidence limits.}
+meta-analysis model.  Note that for simplicity, this function assumes that each of the inputed lower
+and upper limits are 95 \% confidence limits and this cannot be changed.}
 }
 
 \details{
 This function calculates the empirical power of an updated meta-analysis by a generalization
-of Sutton et al. (2007).  The procedure is summarized in the accompanying manuscript.  In short,
+of Sutton et al. (2007).  The procedure is summarized in the accompanying manuscript (Rotondi and Donner, 2012).  In short,
 a hypothetical new study of a given size is simulated, then added to the meta-analysis.  The
-results are re-meta-analyzed and it is verified whether the result is statistically significant. Note
+results are re-meta-analyzed and it is determined whether the result is statistically significant. Note
 that the proportion of variance reduction and power may not always strictly decrease with k, as the simulation
-exhibits individual-level variation.}
+exhibits individual-level variation.  Moreover, the random effects model does not guarantee that future studies will result in higher power due to the presence of between-study heterogeneity.}
 
 \value{
 \item{power}{The power of the updated meta-analysis.  Presented as a matrix of 
 number of clusters by ICC values.}
 \item{data}{The data matrix is returned.}
-\item{newMean}{The preliminary fixed effects mean difference.}
-\item{newVar}{The variance of the preliminary fixed effects mean difference (MD).}
-\item{lF}{The 100(1 - \eqn{\alpha}) \% lower limit of the MD in the Original meta-analysis.}
-\item{uF}{The 100(1 - \eqn{\alpha}) \% upper limit of the MD in the Original meta-analysis.}
+\item{newMean}{The preliminary fixed (or random) effects mean difference.}
+\item{newVar}{The variance of the preliminary fixed (or random) effects mean difference (MD).}
+\item{lF}{The 100(1 - \eqn{\alpha}) \% lower limit of the MD in the original meta-analysis.}
+\item{uF}{The 100(1 - \eqn{\alpha}) \% upper limit of the MD in the original meta-analysis.}
 \item{Var}{The variance of the effect measure.}
 \item{Sig}{Is the result statistically significant (Binary zero or one).}
 \item{k}{The number of clusters randomized per group (vector).}
@@ -92,13 +91,13 @@ An Evidence-Based Perspective.  Computational Statistics and Data Analysis  56:1
 
 \author{Michael Rotondi, \email{mrotondi@yorku.ca}}
 
-\seealso{\code{\link{fixedMetaAnalMD}}, \code{\link{n4propsMeta}}}
+\seealso{\code{\link{n4propsMeta}}}
 
 \examples{
 \dontrun{A brief example with 5 iterations.  }
-n4meansMeta(data=rbind(c(100, 50, 150), c(25, -100, 150), c(-90, -190, 10), c(-125, -200, -50)), 
-k=c(10, 20), ICC=c(0.1, 0.15, 0.18), m=100, sdm=0, meanC=100, sdC=10, iter=5, alpha=0.05, 
-varRed=TRUE, ICCDistn="smooth");
+n4meansMeta(data=rbind(c(100, 50, 150), c(25, -100, 150), c(-90, -190, 10), 
+c(-125, -200, -50)), model="fixed", k=c(10, 20), ICC=c(0.1, 0.15, 0.18), m=100, 
+sdm=0, meanC=100, sdC=10, iter=5, alpha=0.05, varRed=TRUE, ICCDistn="smooth");
 }
 
 \keyword{design}
